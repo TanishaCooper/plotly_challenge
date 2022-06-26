@@ -4,6 +4,7 @@
 //     console.log(data)
 // })
 
+// Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
 
 function dropdown(){
     d3.json("./samples.json").then(data => {
@@ -36,6 +37,7 @@ function metadata(id) {
     });
 }
 
+// ------Build Bar Chart and Buble Chart-----
 function Charts(id){
     d3.json("./samples.json").then(data => {
         var sampledata = data.samples;
@@ -44,6 +46,15 @@ function Charts(id){
         var otu_ids = filterresult.otu_ids;
         var otu_labels = filterresult.otu_labels;
         var sample_values = filterresult.sample_values;
+
+        // --------For Bubble Chart Use:--------
+
+            // otu_ids for the x values.
+            // sample_values for the y values.
+            // sample_values for the marker size.
+            // otu_ids for the marker colors.
+            // otu_labels for the text values.
+
         var bubbledata = [{
             x: otu_ids,
             y: sample_values,
@@ -56,13 +67,21 @@ function Charts(id){
             }
         }];
 
+        // --------For Bar Chart Use:----------
+
+            // sample_values as the values for the bar chart.
+            // otu_ids as the labels for the bar chart.
+            // otu_labels as the hovertext for the chart.
+
         var barData = [{
             y: otu_ids.slice(0, 10).map(val => `OTU ${val}`).reverse(),
             x: sample_values.slice(0, 10).reverse(),
             text: otu_labels.slice(0, 10).reverse(),
             type: "bar",
             orientation: "h",
+            border: 2
         }];
+
         Plotly.newPlot("bar", barData);
 
         Plotly.newPlot("bubble", bubbledata);
@@ -73,11 +92,3 @@ function optionChanged(changeid) {
     metadata(changeid);
     Charts(changeid);
 };
-
-// Create a horizontal bar chart with a dropdown menu to display the top 10 OTUs found in that individual.
-
-// Use sample_values as the values for the bar chart.
-
-// Use otu_ids as the labels for the bar chart.
-
-// Use otu_labels as the hovertext for the chart.
